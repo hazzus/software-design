@@ -8,7 +8,7 @@ import java.net.URLEncoder
 import java.time.Instant
 
 interface Client {
-    fun getData(hashtag: String, startTime: Long, continueMark: String? = null): JsonObject
+    fun getData(hashtag: String, startTime: Long, continueMark: String? = null): Pair<List<HashtagInfo>, String?>
 }
 
 class VKClient : Client {
@@ -16,7 +16,7 @@ class VKClient : Client {
     // token is my app service key
     private val token = "9a0df1319a0df1319a0df131cc9a566ed599a0d9a0df131c30d26a259f4264b29a0f979"
 
-    override fun getData(hashtag: String, startTime: Long, continueMark: String?): JsonObject {
+    override fun getData(hashtag: String, startTime: Long, continueMark: String?): Pair<List<HashtagInfo>, String?> {
         val validHashtag = URLEncoder.encode(if (hashtag.startsWith('#')) hashtag else "#$hashtag", "UTF-8")
         val params = hashMapOf(
             "start_time" to startTime.toString(),
@@ -31,7 +31,7 @@ class VKClient : Client {
         if ("error" in response) {
             throw VKError(response["error"]!!.jsonObject)
         }
-        return response["response"]!!.jsonObject
+        return parseVKResponse(response["response"]!!.jsonObject)
     }
 
     private fun buildRequestUrl(paramsMap: HashMap<String, String>): String {
@@ -40,5 +40,4 @@ class VKClient : Client {
         }.joinToString("&")
         return "https://api.vk.com/method/newsfeed.search?$parameters&access_token=$token&v=$version"
     }
-
 }

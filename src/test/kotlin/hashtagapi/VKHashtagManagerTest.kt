@@ -27,18 +27,12 @@ class VKHashtagManagerTest {
         Assert.assertEquals(listOf<Int>(2, 1, 1, 0, 0), stat.getStats());
     }
 
-    private fun mockingAnswer(startTime: Long): JsonObject  {
-        return Json.decodeFromString(
-            """
-                {
-                    "items": [
-                        { "date": ${startTime + 60} },
-                        { "date": ${startTime + 100} },
-                        { "date": ${startTime + 3660} },
-                        { "date": ${startTime + 3660 * 2} }
-                    ]
-                }
-            """.trimIndent()
-        )
+    private fun mockingAnswer(startTime: Long): Pair<List<HashtagInfo>, String?> {
+        return mutableListOf(
+            HashtagInfo(startTime + 60),
+            HashtagInfo(startTime + 100),
+            HashtagInfo(startTime + 3660),
+            HashtagInfo(startTime + 3660 * 2)
+        ) to null
     }
 }

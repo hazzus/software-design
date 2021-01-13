@@ -1,6 +1,5 @@
 package hashtagapi
 
-import kotlinx.serialization.json.jsonPrimitive
 import java.time.Instant
 
 fun getHourStartTime(hoursPeriod: Int): Long {
@@ -14,12 +13,13 @@ class VKHashtagManager(private val client: Client) {
         val stat = VKHashtagStat(startTime, hoursPeriod)
         var continueMark: String? = null
         while (true) {
-            val response = client.getData(hashtag, startTime, continueMark)
-            stat.update(response)
-            if ("next_from" !in response) {
+            val result = client.getData(hashtag, startTime, continueMark)
+            stat.update(result.first)
+            if (result.second is String) {
+                continueMark = result.second
+            } else {
                 break
             }
-            continueMark = response["next_from"]!!.jsonPrimitive.toString()
         }
         return stat
     }

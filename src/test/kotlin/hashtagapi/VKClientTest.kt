@@ -1,7 +1,6 @@
 package hashtagapi
 
 import org.junit.Test
-import java.time.Instant
 
 class VKClientTest {
     @Test
