@@ -72,7 +72,7 @@
               taskLists.innerHTML += `<li>${taskList.id},\t${taskList.name},\t${taskList.createdAt}<ul id="${id}"></ul></li>`
               const taskListTasks = document.getElementById(id)
               for (const task of taskList.tasks) {
-                taskListTasks.innerHTML += `<li>${task.id},\t${task.name},\t${task.description},\t${task.completed},\t${task.createdAt}<input type="button" value="complete" onclick="markTaskAsDone(${task.id})"></li>`
+                taskListTasks.innerHTML += `<li>${task.id},\t${task.name},\t${task.description},\t${task.completed},\t${task.createdAt}<input type="button" value="change" onclick="markTaskAsDone(${task.id})"></li>`
               }
             }
           })
@@ -82,7 +82,7 @@
             .then(response => response.json())
             .then(data => {
               if (data) {
-                data.completed = true
+                data.completed = !data.completed
                 fetch("/api/v1/task", {
                   method: "put", body: JSON.stringify(data),
                   headers: {
